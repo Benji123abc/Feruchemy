@@ -1,5 +1,7 @@
 .gradle
 build/
+eclipse/
+.settings
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -63,3 +65,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/bin/
+
+.classpath
+*.project
+Feruchemy_Client.launch
+*.launch
