@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "feruchemy",
+  "name": "Feruchemy",
+  "description": "Adds Feruchemy to Minecraft!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authors": ["legobmw99"],
+  "credits": "Brandon Sanderson, for the magic",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

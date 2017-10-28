@@ -1,6 +1,6 @@
 package com.legobmw99.feruchemy;
 
-import com.legobmw99.feruchemy.handlers.FeruchemyTickHandler;
+import com.legobmw99.feruchemy.handlers.CommonTickHandler;
 import com.legobmw99.feruchemy.util.Registry;
 
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -42,13 +42,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 	    
 	    public static class CommonProxy {
 	        public void preInit(FMLPreInitializationEvent e) {
-	        	Registry.initItems();
+	    		MinecraftForge.EVENT_BUS.register(new CommonTickHandler());
 	        	Registry.registerPackets();
 	        	
 	        }
 
 	        public void init(FMLInitializationEvent e) {
-	    		MinecraftForge.EVENT_BUS.register(new FeruchemyTickHandler());
 	    		Registry.initRecipies();
 	        }
 
@@ -65,15 +64,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 	            OBJLoader.INSTANCE.addDomain(MODID);
 
-	            Registry.registerRenders();
 	            Registry.initKeybindings();
 	        }
 
 	        @Override
 	        public void init(FMLInitializationEvent e) {
 	            super.init(e);
+	            Registry.registerItemRenders();
 
-	            // Initialize our input handler so we can listen to keys
+
 	        }
 	    }
 
