@@ -17,7 +17,7 @@ public class CreativeTabFeruchemy extends CreativeTabs {
 
 	@Override
 	public ItemStack getIconItemStack() {
-		return new ItemStack(Item.getByNameOrId("feruchemy:itemBand"), 1);
+		return new ItemStack(Item.getByNameOrId("feruchemy:band"), 1);
 	}
 
 	@Override
