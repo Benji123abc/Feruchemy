@@ -12,71 +12,67 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-	@Mod(modid = Feruchemy.MODID, version = Feruchemy.VERSION)
-	public class Feruchemy {
-	    public static final String MODID = "feruchemy";
-	    public static final String VERSION = "@VERSION@";
-	    
-	    @Instance(value = "feruchemy")
-	    public static Feruchemy instance;
-	    
-		 @SidedProxy
-		    public static CommonProxy proxy;
+@Mod(modid = Feruchemy.MODID, version = Feruchemy.VERSION)
+public class Feruchemy {
+	public static final String MODID = "feruchemy";
+	public static final String VERSION = "@VERSION@";
 
+	@Instance(value = "feruchemy")
+	public static Feruchemy instance;
 
-	    @Mod.EventHandler
-	    public void preInit(FMLPreInitializationEvent event){
-	        proxy.preInit(event);
-	    }
+	@SidedProxy
+	public static CommonProxy proxy;
 
-	    @Mod.EventHandler
-	    public void init(FMLInitializationEvent e) {
-	        proxy.init(e);
-	    }
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		proxy.preInit(event);
+	}
 
-	    @Mod.EventHandler
-	    public void postInit(FMLPostInitializationEvent e) {
-	        proxy.postInit(e);
-	    }
+	@Mod.EventHandler
+	public void init(FMLInitializationEvent e) {
+		proxy.init(e);
+	}
 
-	    
-	    public static class CommonProxy {
-	        public void preInit(FMLPreInitializationEvent e) {
-	    		MinecraftForge.EVENT_BUS.register(new CommonTickHandler());
-	        	Registry.registerPackets();
-	        	
-	        }
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent e) {
+		proxy.postInit(e);
+	}
 
-	        public void init(FMLInitializationEvent e) {
-	    		Registry.initRecipies();
-	        }
+	public static class CommonProxy {
+		public void preInit(FMLPreInitializationEvent e) {
+			MinecraftForge.EVENT_BUS.register(new CommonTickHandler());
+			Registry.registerPackets();
 
-	        public void postInit(FMLPostInitializationEvent e) {
+		}
 
-	        }
-	    }
+		public void init(FMLInitializationEvent e) {
+			Registry.initRecipies();
+		}
 
+		public void postInit(FMLPostInitializationEvent e) {
 
-	    public static class ClientProxy extends CommonProxy {
-	        @Override
-	        public void preInit(FMLPreInitializationEvent e) {
-	            super.preInit(e);
+		}
+	}
 
-	            OBJLoader.INSTANCE.addDomain(MODID);
+	public static class ClientProxy extends CommonProxy {
+		@Override
+		public void preInit(FMLPreInitializationEvent e) {
+			super.preInit(e);
 
-	            Registry.initKeybindings();
-	        }
+			OBJLoader.INSTANCE.addDomain(MODID);
 
-	        @Override
-	        public void init(FMLInitializationEvent e) {
-	            super.init(e);
-	            Registry.registerItemRenders();
+			Registry.initKeybindings();
+		}
 
+		@Override
+		public void init(FMLInitializationEvent e) {
+			super.init(e);
+			Registry.registerItemRenders();
 
-	        }
-	    }
+		}
+	}
 
-	    public static class ServerProxy extends CommonProxy {
+	public static class ServerProxy extends CommonProxy {
 
-	    }
+	}
 }

@@ -17,7 +17,8 @@ public class CreativeTabFeruchemy extends CreativeTabs {
 
 	@Override
 	public ItemStack getIconItemStack() {
-		return new ItemStack(Item.getByNameOrId("feruchemy:band"), 1);
+		int type = (int) (System.currentTimeMillis() / (1000 * 60)) % FeruchemyUtils.METAL_TYPES.length;
+		return new ItemStack(Item.getByNameOrId("feruchemy:" + FeruchemyUtils.METAL_TYPES[type] + "_band"), 1);
 	}
 
 	@Override
