@@ -17,7 +17,14 @@ public class IronBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void bandTick(ItemStack stack, EntityLivingBase player) {
+	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
+		// TODO Auto-generated method stub
+		
 	}
 }

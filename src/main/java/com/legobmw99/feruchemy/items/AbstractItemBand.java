@@ -1,5 +1,9 @@
 package com.legobmw99.feruchemy.items;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.legobmw99.feruchemy.Feruchemy;
 import com.legobmw99.feruchemy.util.Registry;
 
@@ -9,6 +13,7 @@ import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -27,7 +32,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class AbstractItemBand extends Item implements IBauble {
 
 	public AbstractItemBand(String name, int maxFill) {
-		this.name = name;
 		this.maxFill = maxFill;
 
 		setNoRepair();
@@ -37,32 +41,53 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 		setUnlocalizedName(name);
 	}
 
-	public static String name;
 	protected static int maxFill;
+	protected static final String FILL_KEY = "status";
+	protected static final String STORAGE_KEY = "amount";
 
 	protected abstract void stopEffect(EntityLivingBase player);
 
-	protected abstract void bandTick(ItemStack stack, EntityLivingBase player);
+	protected abstract void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power);
 
-	@Override
-	public EnumRarity getRarity(ItemStack stack) {
-		return stack.hasTagCompound() ? EnumRarity.UNCOMMON : EnumRarity.COMMON;
-	}
+	protected abstract void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power);
 
-	@Override
-	public BaubleType getBaubleType(ItemStack itemstack) {
-		return BaubleType.RING;
-	}
-
+	/**
+	 * 	Does most of the heavy lifting
+	 *  @see baubles.api.IBauble#onWornTick(net.minecraft.item.ItemStack, net.minecraft.entity.EntityLivingBase)
+	 */
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		bandTick(stack, player);
+		byte power = stack.getTagCompound().getByte(FILL_KEY);
+		if(power > 0){ // Filling the metalmind
+			bandFillEffects(stack, player, power);
+			fillBand(stack, power);
+		}
+		if (power < 0) { // Draining the metalmind
+			bandDrainEffects(stack, player, power);
+			drainBand(stack, power);
+		}
+	}
+
+	private static void drainBand(ItemStack stack, int power) {
+		if (stack.getTagCompound().getInteger(STORAGE_KEY) > 0) {
+			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
+		} else {
+			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
+		}
+	}
+
+	private static void fillBand(ItemStack stack, int power) {
+		if (stack.getTagCompound().getInteger(STORAGE_KEY) < maxFill) {
+			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
+		} else {
+			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
+		}		
 	}
 
 	protected static void setupBand(ItemStack stack) {
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setByte("status", (byte) 0);
-		nbt.setInteger("amount", 0);
+		nbt.setByte(FILL_KEY, (byte) 0);
+		nbt.setInteger(STORAGE_KEY, 0);
 		stack.setTagCompound(nbt);
 	}
 
@@ -77,11 +102,16 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		stack.getTagCompound().setByte("status", (byte) 0);
+		stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
 		stopEffect(player);
 		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
 	}
 
+	@Override
+	public BaubleType getBaubleType(ItemStack itemstack) {
+		return BaubleType.RING;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public void initModel() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 0,
@@ -105,5 +135,18 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 			}
 		}
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+	}
+
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return stack.hasTagCompound() ? EnumRarity.UNCOMMON : EnumRarity.COMMON;
+	}
+
+	@Override
+    public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced){
+		if(stack.getTagCompound() != null){
+			int percentage = (int) ((stack.getTagCompound().getInteger(STORAGE_KEY) / (float) maxFill) * 100);
+			tooltip.add(percentage + "% Full");
+		}
 	}
 }

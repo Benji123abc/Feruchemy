@@ -13,15 +13,21 @@ public class PewterBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void stopEffect(EntityLivingBase player) {
+	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	protected void bandTick(ItemStack stack, EntityLivingBase player) {
+	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	protected void stopEffect(EntityLivingBase player) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
