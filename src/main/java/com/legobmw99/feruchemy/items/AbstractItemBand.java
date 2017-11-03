@@ -102,22 +102,23 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
+		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
+
+		if (player.world.isRemote) {
+			return;
+		}
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
-		}
-		
-		int fill = stack.getTagCompound().getByte(FILL_KEY);
-
-		if (!player.world.isRemote) {
-			if (fill > 0) {
-				beginFillEffect(player, fill);
-			}
-			if (fill < 0) {
-				beginDrainEffect(player, fill);
-			}
+			return;
 		}
 
-		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
+		byte fill = stack.getTagCompound().getByte(FILL_KEY);
+		if (fill > 0) {
+			beginFillEffect(player, fill);
+		}
+		if (fill < 0) {
+			beginDrainEffect(player, fill);
+		}
 	}
 
 	@Override
@@ -153,11 +154,12 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 			for (int i = 0; i < baubles.getSlots(); i++) {
 				if ((baubles.getStackInSlot(i) == null || baubles.getStackInSlot(i).isEmpty())
 						&& baubles.isItemValidForSlot(i, player.getHeldItem(hand), player)) {
-					baubles.setStackInSlot(i, player.getHeldItem(hand).copy());
+					ItemStack stack = player.getHeldItem(hand).copy();
+					baubles.setStackInSlot(i, stack);
 					if (!player.capabilities.isCreativeMode) {
 						player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
 					}
-					onEquipped(player.getHeldItem(hand), player);
+					onEquipped(stack, player);
 					break;
 				}
 			}
