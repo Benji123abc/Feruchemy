@@ -12,7 +12,7 @@ public class IronBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void stopEffect(EntityLivingBase player) {
+	protected void stopEffects(EntityLivingBase player) {
 		player.setNoGravity(false);
 	}
 
@@ -29,8 +29,15 @@ public class IronBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void beginEffect(EntityLivingBase player, int power) {
+	protected void beginFillEffect(EntityLivingBase player, int power) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void beginDrainEffect(EntityLivingBase player, int power) {
+		if(power == 3){
+			player.setNoGravity(true);
+		}
 	}
 }

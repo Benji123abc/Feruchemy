@@ -10,11 +10,11 @@ import net.minecraft.potion.PotionEffect;
 public class SteelBand extends AbstractItemBand {
 
 	public SteelBand() {
-		super("steel_band", 100000);
+		super("steel_band", 50000);
 	}
 
 	@Override
-	protected void stopEffect(EntityLivingBase player) {
+	protected void stopEffects(EntityLivingBase player) {
 
 	}
 
@@ -33,7 +33,14 @@ public class SteelBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void beginEffect(EntityLivingBase player, int power) {
+	protected void beginFillEffect(EntityLivingBase player, int power) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	protected void beginDrainEffect(EntityLivingBase player, int power) {
+		// TODO Auto-generated method stub
+		
 	}
 }

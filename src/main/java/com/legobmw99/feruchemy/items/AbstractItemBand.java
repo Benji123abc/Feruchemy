@@ -47,9 +47,11 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public static final String STORAGE_KEY = "amount";
 	private static final String MODIFIER[] = { "I", "II", "III" };
 
-	protected abstract void stopEffect(EntityLivingBase player);
+	protected abstract void stopEffects(EntityLivingBase player);
 
-	protected abstract void beginEffect(EntityLivingBase player, int power);
+	protected abstract void beginFillEffect(EntityLivingBase player, int power);
+
+	protected abstract void beginDrainEffect(EntityLivingBase player, int power);
 
 	protected abstract void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power);
 
@@ -63,7 +65,7 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	 */
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if(player.world.isRemote){
+		if (player.world.isRemote) {
 			return;
 		}
 		if (!stack.hasTagCompound()) {
@@ -71,27 +73,25 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 			return;
 		}
 
-
 		NBTTagCompound tag = stack.getTagCompound();
-		byte power = tag.getByte(FILL_KEY);
+		byte fill = tag.getByte(FILL_KEY);
 		int storage = tag.getInteger(STORAGE_KEY);
 
-		if ((power > 0 && storage < maxFill) || (power < 0 && storage > 0)) {
-			if (power > 0) {
-				bandFillEffects(stack, player, power);
+		if ((fill > 0 && storage < maxFill) || (fill < 0 && storage > 0)) {
+			if (fill > 0) {
+				bandFillEffects(stack, player, fill);
 			}
-			if (power < 0) {
-				bandDrainEffects(stack, player, power);
+			if (fill < 0) {
+				bandDrainEffects(stack, player, fill);
 			}
-			tag.setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
-			
-		} else if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
+			tag.setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + fill);
+
+		} else if (fill != 0) {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
-			stopEffect(player);
+			stopEffects(player);
 		}
 
 	}
-
 
 	protected static void setupBand(ItemStack stack) {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -100,20 +100,23 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 		stack.setTagCompound(nbt);
 	}
 
-	protected int timeLeft(int power, int fill) {
-		return power > 0 ? (maxFill - fill) / power : fill / (-1 *power);
-	}
-
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 		}
-		if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
-			if(!player.world.isRemote){
-				beginEffect(player, stack.getTagCompound().getByte(FILL_KEY));
+		
+		int fill = stack.getTagCompound().getByte(FILL_KEY);
+
+		if (!player.world.isRemote) {
+			if (fill > 0) {
+				beginFillEffect(player, fill);
+			}
+			if (fill < 0) {
+				beginDrainEffect(player, fill);
 			}
 		}
+
 		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
 	}
 
@@ -121,7 +124,7 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
 		if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
-			stopEffect(player);
+			stopEffects(player);
 		}
 
 		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
