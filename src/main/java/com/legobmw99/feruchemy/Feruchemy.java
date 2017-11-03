@@ -41,7 +41,6 @@ public class Feruchemy {
 	public static class CommonProxy {
 		public void preInit(FMLPreInitializationEvent e) {
 			MinecraftForge.EVENT_BUS.register(new CommonTickHandler());
-			Registry.registerPackets();
 
 		}
 

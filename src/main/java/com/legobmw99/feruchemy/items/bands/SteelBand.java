@@ -10,7 +10,7 @@ import net.minecraft.potion.PotionEffect;
 public class SteelBand extends AbstractItemBand {
 
 	public SteelBand() {
-		super("steel_band", 1000);
+		super("steel_band", 100000);
 	}
 
 	@Override
@@ -21,15 +21,25 @@ public class SteelBand extends AbstractItemBand {
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		if(power == -1){
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 10, 0, true, false));
-		}
-		
+
 	}
 
 	@Override
 	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		// TODO Auto-generated method stub
+	
+	}
+
+	@Override
+	protected void beginEffect(EntityLivingBase player, int power) {
+		if(power > 0){
+			PotionEffect slowness = new PotionEffect(Potion.getPotionById(2), Integer.MAX_VALUE,
+					(int) Math.pow(2, (1 * power) - 1) - 1, false, true);
+			player.addPotionEffect(slowness);
+		} else if (power < 0){
+			PotionEffect speed = new PotionEffect(Potion.getPotionById(1), Integer.MAX_VALUE,
+					(int) Math.pow(2, (-1 * power) - 1) - 1, false, true);
+			player.addPotionEffect(speed);
+		}
 		
 	}
 

@@ -30,4 +30,10 @@ public class ZincBand extends AbstractItemBand {
 		
 	}
 
+	@Override
+	protected void beginEffect(EntityLivingBase player, int power) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

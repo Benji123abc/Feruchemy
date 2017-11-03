@@ -61,9 +61,4 @@ public class Registry {
 
 	}
 
-	public static void registerPackets() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

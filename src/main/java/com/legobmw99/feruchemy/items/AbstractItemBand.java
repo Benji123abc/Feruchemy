@@ -36,16 +36,20 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 
 		setNoRepair();
 		setMaxDamage(-1);
+		setMaxStackSize(1);
 		setCreativeTab(Registry.tabFeruchemy);
 		setRegistryName(new ResourceLocation(Feruchemy.MODID, name));
 		setUnlocalizedName(name);
 	}
 
-	protected static int maxFill;
-	protected static final String FILL_KEY = "status";
-	protected static final String STORAGE_KEY = "amount";
-
+	protected int maxFill;
+	public static final String FILL_KEY = "status";
+	public static final String STORAGE_KEY = "amount";
+	private static final String MODIFIER[] = {"I", "II", "III"};
+	
 	protected abstract void stopEffect(EntityLivingBase player);
+	protected abstract void beginEffect(EntityLivingBase player, int power);
+
 
 	protected abstract void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power);
 
@@ -57,30 +61,36 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	 */
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
+		if (!stack.hasTagCompound()) {
+			setupBand(stack);
+			return;
+		}
 		byte power = stack.getTagCompound().getByte(FILL_KEY);
 		if(power > 0){ // Filling the metalmind
 			bandFillEffects(stack, player, power);
-			fillBand(stack, power);
+			fillBand(stack, player, power);
 		}
 		if (power < 0) { // Draining the metalmind
 			bandDrainEffects(stack, player, power);
-			drainBand(stack, power);
+			drainBand(stack, player, power);
 		}
 	}
 
-	private static void drainBand(ItemStack stack, int power) {
+	private void drainBand(ItemStack stack, EntityLivingBase player, int power) {
 		if (stack.getTagCompound().getInteger(STORAGE_KEY) > 0) {
 			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
 		} else {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
+			stopEffect(player);
 		}
 	}
 
-	private static void fillBand(ItemStack stack, int power) {
+	private void fillBand(ItemStack stack, EntityLivingBase player, int power) {
 		if (stack.getTagCompound().getInteger(STORAGE_KEY) < maxFill) {
 			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
 		} else {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
+			stopEffect(player);
 		}		
 	}
 
@@ -96,20 +106,30 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 		}
-
-		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
+		if(stack.getTagCompound().getByte(FILL_KEY) != 0){
+			beginEffect(player, stack.getTagCompound().getByte(FILL_KEY));
+		}
+		//player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
 	}
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
-		stopEffect(player);
-		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
+		if(stack.getTagCompound().getByte(FILL_KEY) != 0){
+			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
+			stopEffect(player);
+		}
+		
+		//player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
 	}
 
 	@Override
 	public BaubleType getBaubleType(ItemStack itemstack) {
-		return BaubleType.RING;
+		return BaubleType.TRINKET;
+	}
+	
+	@Override
+	public boolean willAutoSync(ItemStack itemstack, EntityLivingBase player) {
+		return true;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -141,12 +161,27 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public EnumRarity getRarity(ItemStack stack) {
 		return stack.hasTagCompound() ? EnumRarity.UNCOMMON : EnumRarity.COMMON;
 	}
-
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		if(stack.hasTagCompound()){
+			if(stack.getTagCompound().getByte(FILL_KEY) != 0){
+				return true;
+			}
+		}
+		return false;
+	}
 	@Override
     public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced){
 		if(stack.getTagCompound() != null){
+			byte power = stack.getTagCompound().getByte(FILL_KEY);
 			int percentage = (int) ((stack.getTagCompound().getInteger(STORAGE_KEY) / (float) maxFill) * 100);
 			tooltip.add(percentage + "% Full");
+			if(power !=0){
+				String status = power > 0 ? "Filling" : "Draining";
+				tooltip.add(status + " " + MODIFIER[Math.abs(power) - 1]);
+			}
 		}
 	}
 }

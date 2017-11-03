@@ -27,4 +27,10 @@ public class IronBand extends AbstractItemBand {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void beginEffect(EntityLivingBase player, int power) {
+		// TODO Auto-generated method stub
+		
+	}
 }
