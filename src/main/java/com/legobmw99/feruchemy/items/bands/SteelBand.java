@@ -15,32 +15,25 @@ public class SteelBand extends AbstractItemBand {
 
 	@Override
 	protected void stopEffect(EntityLivingBase player) {
-		player.removePotionEffect(Potion.getPotionById(1)); // Speed
-		player.removePotionEffect(Potion.getPotionById(2)); // Slowness
+
 	}
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
+		PotionEffect effect = new PotionEffect(Potion.getPotionById(1), 10 , (int) Math.pow(2, (-1* power) - 1) - 1, false, true);
 
+		player.addPotionEffect(effect);
 	}
 
 	@Override
 	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
-	
+		PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 10 , (int) Math.pow(2, power - 1) - 1, false, true);
+
+		player.addPotionEffect(effect);
 	}
 
 	@Override
 	protected void beginEffect(EntityLivingBase player, int power) {
-		if(power > 0){
-			PotionEffect slowness = new PotionEffect(Potion.getPotionById(2), Integer.MAX_VALUE,
-					(int) Math.pow(2, (1 * power) - 1) - 1, false, true);
-			player.addPotionEffect(slowness);
-		} else if (power < 0){
-			PotionEffect speed = new PotionEffect(Potion.getPotionById(1), Integer.MAX_VALUE,
-					(int) Math.pow(2, (-1 * power) - 1) - 1, false, true);
-			player.addPotionEffect(speed);
-		}
-		
-	}
 
+	}
 }
