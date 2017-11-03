@@ -45,54 +45,53 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	protected int maxFill;
 	public static final String FILL_KEY = "status";
 	public static final String STORAGE_KEY = "amount";
-	private static final String MODIFIER[] = {"I", "II", "III"};
-	
-	protected abstract void stopEffect(EntityLivingBase player);
-	protected abstract void beginEffect(EntityLivingBase player, int power);
+	private static final String MODIFIER[] = { "I", "II", "III" };
 
+	protected abstract void stopEffect(EntityLivingBase player);
+
+	protected abstract void beginEffect(EntityLivingBase player, int power);
 
 	protected abstract void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power);
 
 	protected abstract void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power);
 
 	/**
-	 * 	Does most of the heavy lifting
-	 *  @see baubles.api.IBauble#onWornTick(net.minecraft.item.ItemStack, net.minecraft.entity.EntityLivingBase)
+	 * Does most of the heavy lifting
+	 * 
+	 * @see baubles.api.IBauble#onWornTick(net.minecraft.item.ItemStack,
+	 *      net.minecraft.entity.EntityLivingBase)
 	 */
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
+		if(player.world.isRemote){
+			return;
+		}
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 			return;
 		}
-		byte power = stack.getTagCompound().getByte(FILL_KEY);
-		if(power > 0){ // Filling the metalmind
-			bandFillEffects(stack, player, power);
-			fillBand(stack, player, power);
-		}
-		if (power < 0) { // Draining the metalmind
-			bandDrainEffects(stack, player, power);
-			drainBand(stack, player, power);
-		}
-	}
 
-	private void drainBand(ItemStack stack, EntityLivingBase player, int power) {
-		if (stack.getTagCompound().getInteger(STORAGE_KEY) > 0) {
-			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
-		} else {
+
+		NBTTagCompound tag = stack.getTagCompound();
+		byte power = tag.getByte(FILL_KEY);
+		int storage = tag.getInteger(STORAGE_KEY);
+
+		if ((power > 0 && storage < maxFill) || (power < 0 && storage > 0)) {
+			if (power > 0) {
+				bandFillEffects(stack, player, power);
+			}
+			if (power < 0) {
+				bandDrainEffects(stack, player, power);
+			}
+			tag.setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
+			
+		} else if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
 			stopEffect(player);
 		}
+
 	}
 
-	private void fillBand(ItemStack stack, EntityLivingBase player, int power) {
-		if (stack.getTagCompound().getInteger(STORAGE_KEY) < maxFill) {
-			stack.getTagCompound().setInteger(STORAGE_KEY, stack.getTagCompound().getInteger(STORAGE_KEY) + power);
-		} else {
-			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
-			stopEffect(player);
-		}		
-	}
 
 	protected static void setupBand(ItemStack stack) {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -101,37 +100,43 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 		stack.setTagCompound(nbt);
 	}
 
+	protected int timeLeft(int power, int fill) {
+		return power > 0 ? (maxFill - fill) / power : fill / (-1 *power);
+	}
+
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 		}
-		if(stack.getTagCompound().getByte(FILL_KEY) != 0){
-			beginEffect(player, stack.getTagCompound().getByte(FILL_KEY));
+		if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
+			if(!player.world.isRemote){
+				beginEffect(player, stack.getTagCompound().getByte(FILL_KEY));
+			}
 		}
-		//player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
+		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
 	}
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		if(stack.getTagCompound().getByte(FILL_KEY) != 0){
+		if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
 			stack.getTagCompound().setByte(FILL_KEY, (byte) 0);
 			stopEffect(player);
 		}
-		
-		//player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
+
+		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 2f);
 	}
 
 	@Override
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.TRINKET;
 	}
-	
+
 	@Override
 	public boolean willAutoSync(ItemStack itemstack, EntityLivingBase player) {
 		return true;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void initModel() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 0,
@@ -161,24 +166,25 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public EnumRarity getRarity(ItemStack stack) {
 		return stack.hasTagCompound() ? EnumRarity.UNCOMMON : EnumRarity.COMMON;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean hasEffect(ItemStack stack) {
-		if(stack.hasTagCompound()){
-			if(stack.getTagCompound().getByte(FILL_KEY) != 0){
+		if (stack.hasTagCompound()) {
+			if (stack.getTagCompound().getByte(FILL_KEY) != 0) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	@Override
-    public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced){
-		if(stack.getTagCompound() != null){
+	public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+		if (stack.getTagCompound() != null) {
 			byte power = stack.getTagCompound().getByte(FILL_KEY);
 			int percentage = (int) ((stack.getTagCompound().getInteger(STORAGE_KEY) / (float) maxFill) * 100);
 			tooltip.add(percentage + "% Full");
-			if(power !=0){
+			if (power != 0) {
 				String status = power > 0 ? "Filling" : "Draining";
 				tooltip.add(status + " " + MODIFIER[Math.abs(power) - 1]);
 			}
