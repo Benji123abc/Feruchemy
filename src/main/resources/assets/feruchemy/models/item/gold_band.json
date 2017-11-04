@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "feruchemy:items/pewter_band"
+        "layer0": "feruchemy:items/gold_band"
     }
 }

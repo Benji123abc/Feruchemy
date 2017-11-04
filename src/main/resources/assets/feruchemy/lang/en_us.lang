@@ -8,7 +8,8 @@ item.pewter_band.name=Pewter Band
 item.copper_band.name=Copper Band
 item.tin_band.name=Tin Band
 item.zinc_band.name=Zinc Band
+item.gold_band.name=Gold Band
+
 
 key.categories.feruchemy=Feruchemy
-key.firstBand=First Band
-key.secondBand=Second Band
+key.toggleBands=Toggle Bands

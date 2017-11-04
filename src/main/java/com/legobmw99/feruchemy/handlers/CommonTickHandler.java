@@ -23,10 +23,9 @@ public class CommonTickHandler {
 			if(event.getItemStack().hasTagCompound()){
 				if ((event.getEntityPlayer().isSneaking())){
 					NBTTagCompound tag = event.getItemStack().getTagCompound();
-					int value = tag.getByte(AbstractItemBand.FILL_KEY);
-					value = value < 0 ? value - 1: value + 1;
-					value = (int) (Math.abs(value) > 3 ? -1 * Math.copySign(1, value): value);
-					tag.setByte(AbstractItemBand.FILL_KEY, (byte) value);
+					int status = tag.getByte(AbstractItemBand.FILL_KEY) + 3 + 1;
+					status = (status % 7) - 3;
+					tag.setByte(AbstractItemBand.FILL_KEY, (byte) status);
 					event.setCanceled(true);
 				}
 			}

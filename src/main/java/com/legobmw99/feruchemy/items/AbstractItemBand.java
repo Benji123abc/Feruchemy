@@ -47,7 +47,7 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public static final String STORAGE_KEY = "amount";
 	private static final String MODIFIER[] = { "I", "II", "III" };
 
-	protected abstract void stopEffects(EntityLivingBase player);
+	public abstract void stopEffects(EntityLivingBase player);
 
 	protected abstract void beginFillEffect(EntityLivingBase player, int power);
 
@@ -99,6 +99,19 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 		nbt.setInteger(STORAGE_KEY, 0);
 		stack.setTagCompound(nbt);
 	}
+	
+	public void startEffects(ItemStack stack, EntityLivingBase player){
+		if (player.world.isRemote) {
+			return;
+		}
+		byte fill = stack.getTagCompound().getByte(FILL_KEY);
+		if (fill > 0) {
+			beginFillEffect(player, fill);
+		}
+		if (fill < 0) {
+			beginDrainEffect(player, fill);
+		}
+	}
 
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
@@ -111,14 +124,9 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 			setupBand(stack);
 			return;
 		}
+		
+		startEffects(stack,player);
 
-		byte fill = stack.getTagCompound().getByte(FILL_KEY);
-		if (fill > 0) {
-			beginFillEffect(player, fill);
-		}
-		if (fill < 0) {
-			beginDrainEffect(player, fill);
-		}
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class SteelBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void stopEffects(EntityLivingBase player) {
+	public void stopEffects(EntityLivingBase player) {
 
 	}
 

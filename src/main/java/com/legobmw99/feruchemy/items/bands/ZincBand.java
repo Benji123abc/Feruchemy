@@ -13,7 +13,7 @@ public class ZincBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void stopEffects(EntityLivingBase player) {
+	public void stopEffects(EntityLivingBase player) {
 		// TODO Auto-generated method stub
 
 	}

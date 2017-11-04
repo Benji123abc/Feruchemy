@@ -8,36 +8,36 @@ import net.minecraft.item.ItemStack;
 public class IronBand extends AbstractItemBand {
 
 	public IronBand() {
-		super("iron_band", 1000);
+		super("iron_band", 50000);
 	}
 
 	@Override
-	protected void stopEffects(EntityLivingBase player) {
+	public void stopEffects(EntityLivingBase player) {
 		player.setNoGravity(false);
 	}
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		// TODO Auto-generated method stub
+		player.motionY += (0.04D * power / 3.0) ;
+		player.velocityChanged = true;
 		
 	}
 
 	@Override
 	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		// TODO Auto-generated method stub
-		
+		player.fallDistance = 0.0F;
+
 	}
 
 	@Override
 	protected void beginFillEffect(EntityLivingBase player, int power) {
-		// TODO Auto-generated method stub
-		
+		if(power == 3){
+			player.setNoGravity(true);
+		}
 	}
 
 	@Override
 	protected void beginDrainEffect(EntityLivingBase player, int power) {
-		if(power == 3){
-			player.setNoGravity(true);
-		}
+
 	}
 }

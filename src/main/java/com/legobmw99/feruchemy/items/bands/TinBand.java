@@ -13,7 +13,7 @@ public class TinBand extends AbstractItemBand {
 	}
 
 	@Override
-	protected void stopEffects(EntityLivingBase player) {
+	public void stopEffects(EntityLivingBase player) {
 		// TODO Auto-generated method stub
 
 	}
@@ -38,7 +38,6 @@ public class TinBand extends AbstractItemBand {
 
 	@Override
 	protected void beginDrainEffect(EntityLivingBase player, int power) {
-		// TODO Auto-generated method stub
 		
 	}
 

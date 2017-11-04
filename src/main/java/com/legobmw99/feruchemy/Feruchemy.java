@@ -1,6 +1,8 @@
 package com.legobmw99.feruchemy;
 
+import com.legobmw99.feruchemy.handlers.ClientEventHandler;
 import com.legobmw99.feruchemy.handlers.CommonTickHandler;
+import com.legobmw99.feruchemy.network.packets.ToggleBandPacket;
 import com.legobmw99.feruchemy.util.Registry;
 
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -11,12 +13,16 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = Feruchemy.MODID, version = Feruchemy.VERSION)
 public class Feruchemy {
 	public static final String MODID = "feruchemy";
 	public static final String VERSION = "@VERSION@";
 
+	
 	@Instance(value = "feruchemy")
 	public static Feruchemy instance;
 
@@ -41,7 +47,7 @@ public class Feruchemy {
 	public static class CommonProxy {
 		public void preInit(FMLPreInitializationEvent e) {
 			MinecraftForge.EVENT_BUS.register(new CommonTickHandler());
-
+			Registry.initPackets();
 		}
 
 		public void init(FMLInitializationEvent e) {
@@ -57,7 +63,7 @@ public class Feruchemy {
 		@Override
 		public void preInit(FMLPreInitializationEvent e) {
 			super.preInit(e);
-
+			
 			OBJLoader.INSTANCE.addDomain(MODID);
 
 			Registry.initKeybindings();
@@ -66,6 +72,7 @@ public class Feruchemy {
 		@Override
 		public void init(FMLInitializationEvent e) {
 			super.init(e);
+			MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 			Registry.registerItemRenders();
 
 		}

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "feruchemy:items/band_brass"
+        "layer0": "feruchemy:items/brass_band"
     }
 }

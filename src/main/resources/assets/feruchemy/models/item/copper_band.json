@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "feruchemy:items/band_copper"
+        "layer0": "feruchemy:items/copper_band"
     }
 }
