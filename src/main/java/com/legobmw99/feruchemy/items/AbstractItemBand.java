@@ -112,6 +112,13 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 			beginDrainEffect(player, fill);
 		}
 	}
+	
+	public boolean isFull(ItemStack stack){
+		if (!stack.hasTagCompound()) {
+			setupBand(stack);
+		}
+		return stack.getTagCompound().getInteger(STORAGE_KEY) >= maxFill;
+	}
 
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {

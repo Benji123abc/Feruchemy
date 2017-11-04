@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -99,6 +98,13 @@ public class GUIBandSelect extends GuiScreen {
 			float r = gs;
 			float g = gs;
 			float b = gs;
+			byte status = baubles.getStackInSlot(slots.get(seg)).getTagCompound().getByte(AbstractItemBand.FILL_KEY);
+			if(status > 0){
+				r = 0.5F + status / 6.0F;
+			}
+			if(status < 0){
+				g = 0.5F + -1* status / 6.0F;
+			}
 			float a = 0.6F;
 			if (mouseInSector) {
 				slotSelected = seg;
@@ -177,7 +183,9 @@ public class GUIBandSelect extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		toggleSelected();
+		boolean reset = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak);
+		boolean increment = mouseButton == 0 ? true: false;
+		toggleSelected(increment, reset);
 	}
 
 	@Override
@@ -199,11 +207,13 @@ public class GUIBandSelect extends GuiScreen {
 
 	/**
 	 * Toggles the metal the mouse is currently over
+	 * @param increment 
+	 * @param reset 
 	 */
-	private void toggleSelected() {
+	private void toggleSelected(boolean increment, boolean reset) {
 		if (slotSelected != -1) {
 			int slot = slots.get(slotSelected);
-			Registry.network.sendToServer(new ToggleBandPacket(slot));
+			Registry.network.sendToServer(new ToggleBandPacket(slot, increment, reset));
 			Minecraft.getMinecraft().player.playSound(new SoundEvent(new ResourceLocation("ui.button.click")), 0.1F,2.0F);
 		}
 

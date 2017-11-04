@@ -16,21 +16,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class ToggleBandPacket implements IMessage {
 
 	private int slot;
+	private boolean increment;
+	private boolean reset;
 	
 	public ToggleBandPacket() {}
 	
-	public ToggleBandPacket(int s){
+	public ToggleBandPacket(int s, boolean inc, boolean r){
 		slot = s;
+		increment = inc;
+		reset = r;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		slot = buf.readInt();
+		increment = buf.readBoolean();
+		reset = buf.readBoolean();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(slot);
+		buf.writeBoolean(increment);
+		buf.writeBoolean(reset);
 	}
 
 	public static class Handler implements IMessageHandler<ToggleBandPacket, IMessage> {
@@ -47,8 +55,8 @@ public class ToggleBandPacket implements IMessage {
 						
 						ItemStack copy = baubles.getStackInSlot(message.slot).copy();
 						
-						int status = copy.getTagCompound().getByte(AbstractItemBand.FILL_KEY) + 3 + 1;
-						status = (status % 7) - 3;
+						int status = copy.getTagCompound().getByte(AbstractItemBand.FILL_KEY);
+						status = message.reset ? 0 : (message.increment ? (status < 3 ? status + 1 : status) : (status > -3 ? status - 1 : status));
 						
 						copy.getTagCompound().setByte(AbstractItemBand.FILL_KEY, (byte) status);
 						

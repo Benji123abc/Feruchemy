@@ -12,10 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientEventHandler {
 
-	public ClientEventHandler() {
-
-	}
-
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
