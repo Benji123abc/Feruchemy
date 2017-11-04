@@ -40,7 +40,7 @@ public class GUIBandSelect extends GuiScreen {
 
 	private static final float[][] colors = { {0.4F}, {0.4F,0.52F}, {0.4F,0.52F,0.64F}, {0.4F,0.52F,0.4F,0.52F}, {0.4F,0.52F,0.64F,0.4F,0.52F}, {0.4F,0.52F,0.4F,0.52F,0.4F,0.52F}, {0.4F,0.52F,0.64F,0.28F,0.4F,0.52F,0.28F}};
 
-	int timeIn = 10; 
+	int timeIn = 0; //Make 10 to disable animation 
 	int slotSelected = -1;
 	List<Integer> slots;
 	IBaublesItemHandler baubles;
@@ -93,19 +93,23 @@ public class GUIBandSelect extends GuiScreen {
 			float radius = Math.max(0F, Math.min((timeIn + partialTicks - seg * 6F / segments) * 40F, maxRadius));
 
 			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+			
+			//Determine grayscale based on number of segments. I couldn't do it algorithmically, so I just made it data-driven.
 			float gs = colors[segments-1][seg];
-
 			float r = gs;
 			float g = gs;
 			float b = gs;
+			//Color it based on it filling or draining
 			byte status = baubles.getStackInSlot(slots.get(seg)).getTagCompound().getByte(AbstractItemBand.FILL_KEY);
 			if(status > 0){
-				r = 0.5F + status / 6.0F;
+				r = 0.70F + status / 10.0F;
 			}
 			if(status < 0){
-				g = 0.5F + -1* status / 6.0F;
+				g = 0.70F + -1* status / 10.0F;
 			}
+			
 			float a = 0.6F;
+			
 			if (mouseInSector) {
 				slotSelected = seg;
 			}
@@ -184,7 +188,7 @@ public class GUIBandSelect extends GuiScreen {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		boolean reset = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak);
-		boolean increment = mouseButton == 0 ? true: false;
+		boolean increment = mouseButton == 1;
 		toggleSelected(increment, reset);
 	}
 

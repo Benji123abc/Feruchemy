@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class TinBand extends AbstractItemBand {
 
 	public TinBand() {
-		super("tin_band", 1000);
+		super("tin_band", 50000);
 
 	}
 
@@ -20,7 +20,7 @@ public class TinBand extends AbstractItemBand {
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -38,7 +38,7 @@ public class TinBand extends AbstractItemBand {
 
 	@Override
 	protected void beginDrainEffect(EntityLivingBase player, int power) {
-		
+
 	}
 
 }

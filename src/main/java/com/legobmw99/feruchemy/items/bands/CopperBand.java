@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class CopperBand extends AbstractItemBand {
 
 	public CopperBand() {
-		super("copper_band", 1000);
+		super("copper_band", 50000);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class ZincBand extends AbstractItemBand {
 
 	public ZincBand() {
-		super("zinc_band", 1000);
+		super("zinc_band", 50000);
 
 	}
 

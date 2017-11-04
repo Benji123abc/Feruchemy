@@ -7,6 +7,7 @@ import com.legobmw99.feruchemy.items.AbstractItemBand;
 import com.legobmw99.feruchemy.items.bands.BrassBand;
 import com.legobmw99.feruchemy.items.bands.BronzeBand;
 import com.legobmw99.feruchemy.items.bands.CopperBand;
+import com.legobmw99.feruchemy.items.bands.GoldBand;
 import com.legobmw99.feruchemy.items.bands.IronBand;
 import com.legobmw99.feruchemy.items.bands.PewterBand;
 import com.legobmw99.feruchemy.items.bands.SteelBand;

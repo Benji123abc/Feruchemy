@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class BronzeBand extends AbstractItemBand {
 
 	public BronzeBand() {
-		super("bronze_band", 1000);
+		super("bronze_band", 50000);
 	}
 
 	@Override

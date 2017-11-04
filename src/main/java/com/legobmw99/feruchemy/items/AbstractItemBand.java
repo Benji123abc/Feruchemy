@@ -65,9 +65,7 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	 */
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if (player.world.isRemote) {
-			return;
-		}
+
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 			return;
@@ -101,9 +99,7 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	}
 	
 	public void startEffects(ItemStack stack, EntityLivingBase player){
-		if (player.world.isRemote) {
-			return;
-		}
+
 		byte fill = stack.getTagCompound().getByte(FILL_KEY);
 		if (fill > 0) {
 			beginFillEffect(player, fill);
@@ -124,9 +120,6 @@ public abstract class AbstractItemBand extends Item implements IBauble {
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, .75F, 1.9f);
 
-		if (player.world.isRemote) {
-			return;
-		}
 		if (!stack.hasTagCompound()) {
 			setupBand(stack);
 			return;
