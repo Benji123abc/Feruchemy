@@ -25,9 +25,6 @@ public class GoldBand extends AbstractItemBand {
 
 	@Override
 	protected void beginFillEffect(EntityLivingBase player, int power) {
-		if (player.world.isRemote) {
-			return;
-		}
 		double health = 20.0 - Math.pow(2, power + 1);
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
 		player.setHealth((float) health);
@@ -35,9 +32,6 @@ public class GoldBand extends AbstractItemBand {
 
 	@Override
 	protected void beginDrainEffect(EntityLivingBase player, int power) {
-		if (player.world.isRemote) {
-			return;
-		}
 		double health = 20.0 + Math.pow(2, -1*power + 1);
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
 		player.setHealth((float) health);

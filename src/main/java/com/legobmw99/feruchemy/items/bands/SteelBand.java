@@ -21,9 +21,6 @@ public class SteelBand extends AbstractItemBand {
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		if (player.world.isRemote) {
-			return;
-		}
 		PotionEffect effect = new PotionEffect(Potion.getPotionById(1), 10 , (int) Math.pow(2, (-1* power) - 1) - 1, false, true);
 
 		player.addPotionEffect(effect);
@@ -31,9 +28,6 @@ public class SteelBand extends AbstractItemBand {
 
 	@Override
 	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		if (player.world.isRemote) {
-			return;
-		}
 		PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 10 , (int) Math.pow(2, power - 1) - 1, false, true);
 
 		player.addPotionEffect(effect);

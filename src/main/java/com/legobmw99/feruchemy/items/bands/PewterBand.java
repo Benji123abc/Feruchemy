@@ -16,9 +16,7 @@ public class PewterBand extends AbstractItemBand {
 
 	@Override
 	protected void bandDrainEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		if (player.world.isRemote) {
-			return;
-		}
+
 		PotionEffect effect = new PotionEffect(Potion.getPotionById(5), 10 , (int) Math.pow(2, (-1*power) - 1) - 1, false, true);
 
 		player.addPotionEffect(effect);		
@@ -26,9 +24,6 @@ public class PewterBand extends AbstractItemBand {
 
 	@Override
 	protected void bandFillEffects(ItemStack stack, EntityLivingBase player, byte power) {
-		if (player.world.isRemote) {
-			return;
-		}
 		PotionEffect effect = new PotionEffect(Potion.getPotionById(18), 10 , (int) Math.pow(2, power - 1) - 1, false, true);
 
 		player.addPotionEffect(effect);		
