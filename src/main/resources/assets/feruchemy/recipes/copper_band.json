@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "feruchemy:copper_band"
+  },
+  "pattern": [
+    " W ",
+    "W W",
+    " W "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "W": {
+      "item": "allomancy:ingotCopper"
+    }
+  }
+}

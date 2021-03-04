@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "feruchemy:gold_band"
+  },
+  "pattern": [
+    " W ",
+    "W W",
+    " W "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "W": {
+      "item": "minecraft:gold_ingot"
+    }
+  }
+}

@@ -1,5 +1,8 @@
 package com.legobmw99.feruchemy.util;
 
+import com.legobmw99.allomancy.util.RecipeItemVial;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.input.Keyboard;
 
 import com.legobmw99.feruchemy.Feruchemy;
@@ -13,6 +16,8 @@ import com.legobmw99.feruchemy.items.bands.PewterBand;
 import com.legobmw99.feruchemy.items.bands.SteelBand;
 import com.legobmw99.feruchemy.items.bands.TinBand;
 import com.legobmw99.feruchemy.items.bands.ZincBand;
+import com.legobmw99.feruchemy.items.bands.BendalloyBand;
+import com.legobmw99.feruchemy.items.bands.CadmiumBand;
 import com.legobmw99.feruchemy.network.packets.ToggleBandPacket;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -27,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Registry {
 
 	public static AbstractItemBand ironBand, steelBand, tinBand, pewterBand, zincBand, brassBand, copperBand,
-			bronzeBand, goldBand;
+			bronzeBand, goldBand, cadmiumBand, bendalloyBand;
 	public static KeyBinding toggleBands, secondBand;
 	public static CreativeTabs tabFeruchemy = new CreativeTabFeruchemy(CreativeTabs.getNextID(), Feruchemy.MODID);
 
@@ -35,9 +40,11 @@ public class Registry {
 
 	public static void initItems(Register event) {
 		// Register bands
-		event.getRegistry().registerAll(ironBand = new IronBand(), steelBand = new SteelBand(), tinBand = new TinBand(),
-				pewterBand = new PewterBand(), zincBand = new ZincBand(), brassBand = new BrassBand(),
-				copperBand = new CopperBand(), bronzeBand = new BronzeBand(), goldBand = new GoldBand());
+		event.getRegistry().registerAll(ironBand = new IronBand(),
+				steelBand = new SteelBand(), tinBand = new TinBand(), pewterBand = new PewterBand(),
+				zincBand = new ZincBand(), brassBand = new BrassBand(), copperBand = new CopperBand(),
+				bronzeBand = new BronzeBand(), goldBand = new GoldBand(), cadmiumBand = new CadmiumBand(),
+				bendalloyBand = new BendalloyBand());
 
 	}
 
@@ -53,7 +60,8 @@ public class Registry {
 		copperBand.initModel();
 		bronzeBand.initModel();
 		goldBand.initModel();
-
+		cadmiumBand.initModel();
+		bendalloyBand.initModel();
 	}
 
 	public static void initKeybindings() {
@@ -72,4 +80,7 @@ public class Registry {
 		network.registerMessage(ToggleBandPacket.Handler.class, ToggleBandPacket.class, 0, Side.SERVER);		
 	}
 
+	public static void setupRecipes(Register event) {
+//		GameRegistry.addShapedRecipe();
+	}
 }

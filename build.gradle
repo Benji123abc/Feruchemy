@@ -31,7 +31,8 @@ minecraft {
 
 dependencies {
 
-    compile files("libs/Baubles-1.12-1.5.1-deobf.jar")
+    compile files("libs/Baubles-1.12-1.5.1.jar")
+    compile files("libs/allomancy-2.9.1.jar")
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"

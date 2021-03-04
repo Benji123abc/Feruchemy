@@ -4,6 +4,7 @@ import com.legobmw99.feruchemy.items.AbstractItemBand;
 import com.legobmw99.feruchemy.util.Registry;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -31,4 +32,10 @@ public class CommonTickHandler {
 			}
 		}
 	}
+
+	@SubscribeEvent
+	public void onRegisterRecipes(RegistryEvent.Register<IRecipe> event){
+		Registry.setupRecipes(event);
+	}
+
 }
