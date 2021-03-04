@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "W": {
-      "item": "allomancy:ingotBronze"
+      "item": "feruchemy:refined_bronze"
     }
   }
 }

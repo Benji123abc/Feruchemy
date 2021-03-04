@@ -1,7 +1,14 @@
 package com.legobmw99.feruchemy.util;
 
+import com.legobmw99.allomancy.Allomancy;
+import com.legobmw99.allomancy.util.AllomancyCapability;
+import com.legobmw99.allomancy.util.AllomancyConfig;
 import com.legobmw99.allomancy.util.RecipeItemVial;
+import com.legobmw99.feruchemy.items.RefinedMetal;
+import net.minecraft.client.Minecraft;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.MetadataCollection;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.input.Keyboard;
 
@@ -33,6 +40,8 @@ public class Registry {
 
 	public static AbstractItemBand ironBand, steelBand, tinBand, pewterBand, zincBand, brassBand, copperBand,
 			bronzeBand, goldBand, cadmiumBand, bendalloyBand;
+	public static RefinedMetal refinedIron, refinedSteel, refinedTin, refinedPewter, refinedZinc, refinedBrass, refinedCopper,
+			refinedBronze, refinedGold;
 	public static KeyBinding toggleBands, secondBand;
 	public static CreativeTabs tabFeruchemy = new CreativeTabFeruchemy(CreativeTabs.getNextID(), Feruchemy.MODID);
 
@@ -45,6 +54,10 @@ public class Registry {
 				zincBand = new ZincBand(), brassBand = new BrassBand(), copperBand = new CopperBand(),
 				bronzeBand = new BronzeBand(), goldBand = new GoldBand(), cadmiumBand = new CadmiumBand(),
 				bendalloyBand = new BendalloyBand());
+		event.getRegistry().registerAll(refinedIron = new RefinedMetal("refined_iron"),
+				refinedSteel = new RefinedMetal("refined_steel"), refinedTin = new RefinedMetal("refined_tin"), refinedPewter = new RefinedMetal("refined_pewter"),
+				refinedZinc = new RefinedMetal("refined_zinc"), refinedBrass = new RefinedMetal("refined_brass"), refinedCopper = new RefinedMetal("refined_copper"),
+				refinedBronze = new RefinedMetal("refined_bronze"), refinedGold = new RefinedMetal("refined_gold"));
 
 	}
 
@@ -62,6 +75,17 @@ public class Registry {
 		goldBand.initModel();
 		cadmiumBand.initModel();
 		bendalloyBand.initModel();
+
+		//Register refined metal models
+		refinedIron.initModel();
+		refinedSteel.initModel();
+		refinedTin.initModel();
+		refinedPewter.initModel();
+		refinedZinc.initModel();
+		refinedBrass.initModel();
+		refinedCopper.initModel();
+		refinedBronze.initModel();
+		refinedGold.initModel();
 	}
 
 	public static void initKeybindings() {
@@ -81,6 +105,13 @@ public class Registry {
 	}
 
 	public static void setupRecipes(Register event) {
-//		GameRegistry.addShapedRecipe();
+		// TODO: Steel band crafting and smelting recipe
+		GameRegistry.addSmelting(Items.IRON_INGOT, new ItemStack(refinedIron), 0.1f);
+		GameRegistry.addSmelting(Items.GOLD_INGOT, new ItemStack(refinedGold), 0.1f);
+		GameRegistry.addSmelting(com.legobmw99.allomancy.util.Registry.itemTinIngot, new ItemStack(refinedTin), 0.1f);
+		GameRegistry.addSmelting(com.legobmw99.allomancy.util.Registry.itemBrassIngot, new ItemStack(refinedBrass), 0.1f);
+		GameRegistry.addSmelting(com.legobmw99.allomancy.util.Registry.itemCopperIngot, new ItemStack(refinedCopper), 0.1f);
+		GameRegistry.addSmelting(com.legobmw99.allomancy.util.Registry.itemZincIngot, new ItemStack(refinedZinc), 0.1f);
+		GameRegistry.addSmelting(com.legobmw99.allomancy.util.Registry.itemBronzeIngot, new ItemStack(refinedBronze), 0.1f);
 	}
 }

@@ -12,8 +12,18 @@
   "item.gold_band.name": "Gold Band",
   "item.cadmium_band.name": "Cadmium Band",
   "item.bendalloy_band.name": "Bendalloy Band",
+  "item.refined_iron.name": "Refined Iron",
+  "item.refined_gold.name": "Refined Gold",
+  "item.refined_brass.name": "Refined Brass",
+  "item.refined_bronze.name": "Refined Bronze",
+  "item.refined_steel.name": "Refined Steel",
+  "item.refined_pewter.name": "Refined Pewter",
+  "item.refined_copper.name": "Refined Copper",
+  "item.refined_tin.name": "Refined Tin",
+  "item.refined_zinc.name": "Refined Zinc",
+
 
 
   "key.categories.feruchemy": "Feruchemy",
-  "key.toggleBands": "Toggle Bands",
+  "key.toggleBands": "Toggle Bands"
 }

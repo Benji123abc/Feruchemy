@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "W": {
-      "item": "minecraft:gold_ingot"
+      "item": "feruchemy:refined_gold"
     }
   }
 }

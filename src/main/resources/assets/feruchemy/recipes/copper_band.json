@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "W": {
-      "item": "allomancy:ingotCopper"
+      "item": "feruchemy:refined_copper"
     }
   }
 }
